@@ -780,7 +780,7 @@ jobs:
     - name: Setup Pages
       id: setup-pages
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: actions/configure-pages@v4
+      uses: actions/configure-pages@v5
       continue-on-error: true
     
     # Step 9: Upload to GitHub Pages (only if Pages setup succeeded)
