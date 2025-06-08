@@ -133,7 +133,7 @@ jobs:
     
     # Step 2: Install Rust toolchain with Cargo.lock v4 support
     - name: Install Rust toolchain
-      uses: dtolnay/rust-toolchain@1.86.0
+      uses: dtolnay/rust-toolchain@1.100.0
       with:
         targets: ${{ matrix.target }}
     
@@ -232,7 +232,7 @@ jobs:
     
     # Step 2: Install Rust toolchain
     - name: Install Rust toolchain
-      uses: dtolnay/rust-toolchain@1.86.0
+      uses: dtolnay/rust-toolchain@1.100.0
     
     # Step 3: Setup Rust cache
     - name: Setup Rust cache
