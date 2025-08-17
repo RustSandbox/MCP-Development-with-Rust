@@ -36,7 +36,7 @@ jobs:
     steps:
     # Step 1: Check out the source code from the repository
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     
     # Step 2: Install Rust toolchain from rust-toolchain.toml
     # This ensures consistent Rust 1.86.0 that supports Cargo.lock v4
@@ -86,7 +86,7 @@ jobs:
     steps:
     # Step 1: Check out the source code
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     
     # Step 2: Install Rust toolchain with Cargo.lock v4 support
     - name: Install Rust toolchain
@@ -129,7 +129,7 @@ jobs:
     steps:
     # Step 1: Check out the source code
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     
     # Step 2: Install Rust toolchain with Cargo.lock v4 support
     - name: Install Rust toolchain
@@ -163,7 +163,7 @@ jobs:
     steps:
     # Step 1: Check out the source code
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     
     # Step 2: Install Rust toolchain with Cargo.lock v4 support
     - name: Install Rust toolchain
@@ -194,7 +194,7 @@ jobs:
     steps:
     # Step 1: Check out the source code
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     
     # Step 2: Run GitHub's dependency review action
     # This checks for security issues in dependency changes
