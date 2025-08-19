@@ -152,11 +152,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize logging to help with debugging
     tracing_subscriber::fmt::init();
 
-    println!("🚀 Starting Hello World MCP Server");
-    println!("📝 Available tools: greeting");
-    println!("💡 Send JSON-RPC messages via stdin");
-    println!("📋 Example: {{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\"}}");
-    println!();
+    eprintln!("🚀 Starting Hello World MCP Server");
+    eprintln!("📝 Available tools: greeting");
+    eprintln!("💡 Send JSON-RPC messages via stdin");
+    eprintln!("📋 Example: {{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\"}}");
+    eprintln!();
 
     // Create our server handler instance
     let server = HelloWorldServer::new();
@@ -204,6 +204,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    println!("👋 Hello World server shutting down");
+    eprintln!("👋 Hello World server shutting down");
     Ok(())
 }

@@ -168,7 +168,7 @@ impl DatabaseServer {
         .await
         .map_err(|e| format!("Failed to create logs table: {}", e))?;
 
-        println!("✅ Database migrations completed");
+        eprintln!("✅ Database migrations completed");
         Ok(())
     }
 
@@ -552,32 +552,32 @@ impl DatabaseServer {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
-    println!("🗄️  Starting Database MCP Server");
-    println!("===============================");
+    eprintln!("🗄️  Starting Database MCP Server");
+    eprintln!("===============================");
 
     // Create config
     let config = DatabaseConfig::default();
 
-    println!("⚙️  Database Configuration:");
-    println!("   Database URL: {}", config.database_url);
-    println!("   Max connections: {}", config.max_connections);
-    println!("   Enable migrations: {}", config.enable_migrations);
+    eprintln!("⚙️  Database Configuration:");
+    eprintln!("   Database URL: {}", config.database_url);
+    eprintln!("   Max connections: {}", config.max_connections);
+    eprintln!("   Enable migrations: {}", config.enable_migrations);
 
     // Create server
     let server = DatabaseServer::new(config).await?;
 
     // Demo database operations
-    println!("\n🧪 Database Operations Demo:");
+    eprintln!("\n🧪 Database Operations Demo:");
 
     // List tools
     let tools = server.list_tools();
-    println!("📋 Available tools ({}):", tools.len());
+    eprintln!("📋 Available tools ({}):", tools.len());
     for tool in &tools {
-        println!("  - {}: {}", tool.name, tool.description);
+        eprintln!("  - {}: {}", tool.name, tool.description);
     }
 
     // Create a demo user
-    println!("\n👤 Creating demo user:");
+    eprintln!("\n👤 Creating demo user:");
     let create_args = serde_json::json!({
         "name": "Alice Johnson",
         "email": "alice@example.com",
@@ -587,10 +587,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match server.call_tool("create_user", create_args).await {
         Ok(result) => {
             if let Ok(user) = serde_json::from_value::<User>(result) {
-                println!("  ✅ Created user: {} (ID: {})", user.name, user.id);
+                eprintln!("  ✅ Created user: {} (ID: {})", user.name, user.id);
 
                 // Update the user
-                println!("\n✏️  Updating user:");
+                eprintln!("\n✏️  Updating user:");
                 let update_args = serde_json::json!({
                     "id": user.id,
                     "name": "Alice Smith"
@@ -599,14 +599,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 match server.call_tool("update_user", update_args).await {
                     Ok(updated) => {
                         if let Ok(updated_user) = serde_json::from_value::<User>(updated) {
-                            println!("  ✅ Updated user: {}", updated_user.name);
+                            eprintln!("  ✅ Updated user: {}", updated_user.name);
                         }
                     }
-                    Err(e) => println!("  ❌ Update failed: {}", e),
+                    Err(e) => eprintln!("  ❌ Update failed: {}", e),
                 }
 
                 // Search users
-                println!("\n🔍 Searching users:");
+                eprintln!("\n🔍 Searching users:");
                 let search_args = serde_json::json!({
                     "query": "Alice",
                     "limit": 5
@@ -616,40 +616,40 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     Ok(results) => {
                         let default_count = Value::Number(serde_json::Number::from(0));
                         let count = results.get("count").unwrap_or(&default_count);
-                        println!("  ✅ Found {} users matching 'Alice'", count);
+                        eprintln!("  ✅ Found {} users matching 'Alice'", count);
                     }
-                    Err(e) => println!("  ❌ Search failed: {}", e),
+                    Err(e) => eprintln!("  ❌ Search failed: {}", e),
                 }
             }
         }
-        Err(e) => println!("  ❌ Create user failed: {}", e),
+        Err(e) => eprintln!("  ❌ Create user failed: {}", e),
     }
 
     // Get database stats
-    println!("\n📊 Database statistics:");
+    eprintln!("\n📊 Database statistics:");
     match server
         .call_tool("get_database_stats", serde_json::json!({}))
         .await
     {
         Ok(result) => {
             if let Ok(stats) = serde_json::from_value::<DatabaseStats>(result) {
-                println!("  ✅ Total users: {}", stats.total_users);
-                println!("     Tables: {}", stats.table_count);
-                println!("     Pool size: {}", stats.connection_pool_size);
-                println!("     Active connections: {}", stats.active_connections);
+                eprintln!("  ✅ Total users: {}", stats.total_users);
+                eprintln!("     Tables: {}", stats.table_count);
+                eprintln!("     Pool size: {}", stats.connection_pool_size);
+                eprintln!("     Active connections: {}", stats.active_connections);
             }
         }
-        Err(e) => println!("  ❌ Stats failed: {}", e),
+        Err(e) => eprintln!("  ❌ Stats failed: {}", e),
     }
 
-    println!("\n🎉 Database demo completed!");
-    println!("\n💾 Database features demonstrated:");
-    println!("   ✅ Connection pooling with SQLite");
-    println!("   ✅ Prepared statements for security");
-    println!("   ✅ Database migrations");
-    println!("   ✅ CRUD operations with proper error handling");
-    println!("   ✅ Search and pagination");
-    println!("   ✅ Operation logging and statistics");
+    eprintln!("\n🎉 Database demo completed!");
+    eprintln!("\n💾 Database features demonstrated:");
+    eprintln!("   ✅ Connection pooling with SQLite");
+    eprintln!("   ✅ Prepared statements for security");
+    eprintln!("   ✅ Database migrations");
+    eprintln!("   ✅ CRUD operations with proper error handling");
+    eprintln!("   ✅ Search and pagination");
+    eprintln!("   ✅ Operation logging and statistics");
 
     Ok(())
 }

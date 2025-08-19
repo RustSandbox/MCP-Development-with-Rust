@@ -684,36 +684,36 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize logging for observability
     tracing_subscriber::fmt::init();
 
-    println!("🚀 Starting Monitoring and Metrics Server");
-    println!("==========================================");
+    eprintln!("🚀 Starting Monitoring and Metrics Server");
+    eprintln!("==========================================");
 
     let server = MonitoringServer::new();
 
-    println!("\n🧪 Monitoring and Metrics Demo:");
+    eprintln!("\n🧪 Monitoring and Metrics Demo:");
 
     // List available tools
     let tools = server.list_tools();
-    println!("📋 Available monitoring tools ({}):", tools.len());
+    eprintln!("📋 Available monitoring tools ({}):", tools.len());
     for tool in &tools {
-        println!("  - {}: {}", tool.name, tool.description);
+        eprintln!("  - {}: {}", tool.name, tool.description);
     }
 
     // Demonstrate metrics collection
-    println!("\n📊 Collecting current system metrics:");
+    eprintln!("\n📊 Collecting current system metrics:");
     match server
         .call_tool("get_current_metrics", serde_json::json!({}))
         .await
     {
         Ok(result) => {
             let metrics: SystemMetrics = serde_json::from_value(result).unwrap();
-            println!("  ✅ Metrics collected successfully");
-            println!("     CPU Usage: {:.1}%", metrics.cpu_usage_percent);
-            println!("     Memory Usage: {:.1}%", metrics.memory_usage_percent);
-            println!("     Disk Usage: {:.1}%", metrics.disk_usage_percent);
-            println!("     Active Connections: {}", metrics.active_connections);
-            println!("     Uptime: {} seconds", metrics.uptime_seconds);
+            eprintln!("  ✅ Metrics collected successfully");
+            eprintln!("     CPU Usage: {:.1}%", metrics.cpu_usage_percent);
+            eprintln!("     Memory Usage: {:.1}%", metrics.memory_usage_percent);
+            eprintln!("     Disk Usage: {:.1}%", metrics.disk_usage_percent);
+            eprintln!("     Active Connections: {}", metrics.active_connections);
+            eprintln!("     Uptime: {} seconds", metrics.uptime_seconds);
         }
-        Err(e) => println!("  ❌ Metrics collection failed: {}", e),
+        Err(e) => eprintln!("  ❌ Metrics collection failed: {}", e),
     }
 
     // Wait a moment and collect metrics again to build history
@@ -723,7 +723,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await;
 
     // Demonstrate metrics history
-    println!("\n📈 Retrieving metrics history:");
+    eprintln!("\n📈 Retrieving metrics history:");
     match server
         .call_tool("get_metrics_history", serde_json::json!({"limit": 5}))
         .await
@@ -731,14 +731,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(result) => {
             let history_data: Value = result;
             let total_records = history_data.get("total_records").unwrap_or(&Value::Null);
-            println!("  ✅ Retrieved metrics history");
-            println!("     Total records: {}", total_records);
+            eprintln!("  ✅ Retrieved metrics history");
+            eprintln!("     Total records: {}", total_records);
         }
-        Err(e) => println!("  ❌ History retrieval failed: {}", e),
+        Err(e) => eprintln!("  ❌ History retrieval failed: {}", e),
     }
 
     // Demonstrate health checks
-    println!("\n🏥 Performing health checks:");
+    eprintln!("\n🏥 Performing health checks:");
     match server
         .call_tool(
             "perform_health_check",
@@ -749,8 +749,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(result) => {
             let health_data: Value = result;
             let checks_performed = health_data.get("checks_performed").unwrap_or(&Value::Null);
-            println!("  ✅ Health checks completed");
-            println!("     Checks performed: {}", checks_performed);
+            eprintln!("  ✅ Health checks completed");
+            eprintln!("     Checks performed: {}", checks_performed);
 
             if let Some(results) = health_data.get("results") {
                 if let Some(results_array) = results.as_array() {
@@ -758,7 +758,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         if let Ok(check) =
                             serde_json::from_value::<HealthCheckResult>(result.clone())
                         {
-                            println!(
+                            eprintln!(
                                 "     - {}: {} ({}ms)",
                                 check.service_name, check.status, check.response_time_ms
                             );
@@ -767,11 +767,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
         }
-        Err(e) => println!("  ❌ Health checks failed: {}", e),
+        Err(e) => eprintln!("  ❌ Health checks failed: {}", e),
     }
 
     // Demonstrate alert management
-    println!("\n🚨 Checking active alerts:");
+    eprintln!("\n🚨 Checking active alerts:");
     match server
         .call_tool("get_active_alerts", serde_json::json!({}))
         .await
@@ -779,14 +779,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(result) => {
             let alerts_data: Value = result;
             let total_alerts = alerts_data.get("total_alerts").unwrap_or(&Value::Null);
-            println!("  ✅ Alert check completed");
-            println!("     Active alerts: {}", total_alerts);
+            eprintln!("  ✅ Alert check completed");
+            eprintln!("     Active alerts: {}", total_alerts);
         }
-        Err(e) => println!("  ❌ Alert check failed: {}", e),
+        Err(e) => eprintln!("  ❌ Alert check failed: {}", e),
     }
 
     // Demonstrate threshold configuration
-    println!("\n⚙️  Configuring alert thresholds:");
+    eprintln!("\n⚙️  Configuring alert thresholds:");
     let threshold_config = serde_json::json!({
         "metric_name": "cpu_usage_percent",
         "threshold": 75.0,
@@ -800,26 +800,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(result) => {
             let config_data: Value = result;
             let success = config_data.get("success").unwrap_or(&Value::Null);
-            println!("  ✅ Threshold configuration: {}", success);
+            eprintln!("  ✅ Threshold configuration: {}", success);
         }
-        Err(e) => println!("  ❌ Threshold configuration failed: {}", e),
+        Err(e) => eprintln!("  ❌ Threshold configuration failed: {}", e),
     }
 
-    println!("\n🎉 Monitoring and Metrics demo completed!");
-    println!("\n✨ This is example 11 of 20 progressive MCP examples.");
-    println!("   This example demonstrates comprehensive monitoring patterns");
-    println!("   essential for production systems including:");
-    println!("   - Real-time metrics collection and storage");
-    println!("   - Health check orchestration and reporting");
-    println!("   - Threshold-based alerting and notification");
-    println!("   - Historical data management and trend analysis");
-    println!("   - Configurable monitoring parameters");
-    println!("\n🔧 Key production monitoring concepts covered:");
-    println!("   - Circular buffer for metrics history management");
-    println!("   - Thread-safe data structures for concurrent access");
-    println!("   - Realistic simulation of system resource monitoring");
-    println!("   - Alert lifecycle management (creation, filtering, clearing)");
-    println!("   - Extensible architecture for additional monitoring tools");
+    eprintln!("\n🎉 Monitoring and Metrics demo completed!");
+    eprintln!("\n✨ This is example 11 of 20 progressive MCP examples.");
+    eprintln!("   This example demonstrates comprehensive monitoring patterns");
+    eprintln!("   essential for production systems including:");
+    eprintln!("   - Real-time metrics collection and storage");
+    eprintln!("   - Health check orchestration and reporting");
+    eprintln!("   - Threshold-based alerting and notification");
+    eprintln!("   - Historical data management and trend analysis");
+    eprintln!("   - Configurable monitoring parameters");
+    eprintln!("\n🔧 Key production monitoring concepts covered:");
+    eprintln!("   - Circular buffer for metrics history management");
+    eprintln!("   - Thread-safe data structures for concurrent access");
+    eprintln!("   - Realistic simulation of system resource monitoring");
+    eprintln!("   - Alert lifecycle management (creation, filtering, clearing)");
+    eprintln!("   - Extensible architecture for additional monitoring tools");
 
     Ok(())
 }

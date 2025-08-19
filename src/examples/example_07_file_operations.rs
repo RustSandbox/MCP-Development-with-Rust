@@ -501,17 +501,17 @@ impl FileOperationsServer {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
-    println!("📁 Starting File Operations MCP Server");
-    println!("=====================================");
+    eprintln!("📁 Starting File Operations MCP Server");
+    eprintln!("=====================================");
 
     // Create config with safe defaults
     let config = FileOperationsConfig::default();
 
-    println!("⚙️  Security Configuration:");
-    println!("   Read-only mode: {}", config.read_only_mode);
-    println!("   Max file size: {} bytes", config.max_file_size);
-    println!("   Allowed extensions: {:?}", config.allowed_extensions);
-    println!("   Allowed directories: {:?}", config.allowed_directories);
+    eprintln!("⚙️  Security Configuration:");
+    eprintln!("   Read-only mode: {}", config.read_only_mode);
+    eprintln!("   Max file size: {} bytes", config.max_file_size);
+    eprintln!("   Allowed extensions: {:?}", config.allowed_extensions);
+    eprintln!("   Allowed directories: {:?}", config.allowed_directories);
 
     // Create server
     let server = FileOperationsServer::new(config);
@@ -527,17 +527,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _ = async_fs::write("./temp/config.json", r#"{"demo": true, "version": "1.0"}"#).await;
 
     // Demo file operations
-    println!("\n🧪 File Operations Demo:");
+    eprintln!("\n🧪 File Operations Demo:");
 
     // List tools
     let tools = server.list_tools();
-    println!("📋 Available tools ({}):", tools.len());
+    eprintln!("📋 Available tools ({}):", tools.len());
     for tool in &tools {
-        println!("  - {}: {}", tool.name, tool.description);
+        eprintln!("  - {}: {}", tool.name, tool.description);
     }
 
     // Test read file
-    println!("\n📖 Reading demo file:");
+    eprintln!("\n📖 Reading demo file:");
     let read_args = serde_json::json!({
         "file_path": "./temp/demo.txt"
     });
@@ -545,21 +545,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match server.call_tool("read_file", read_args).await {
         Ok(result) => {
             let content = result.get("content").unwrap_or(&Value::Null);
-            println!(
+            eprintln!(
                 "  ✅ Content: {}",
                 content.as_str().unwrap_or("").lines().next().unwrap_or("")
             );
-            println!(
+            eprintln!(
                 "     Size: {} bytes",
                 result.get("size").unwrap_or(&Value::Null)
             );
         }
-        Err(e) => println!("  ❌ Read failed: {}", e),
+        Err(e) => eprintln!("  ❌ Read failed: {}", e),
     }
 
     // Test list directory
     if server.config.enable_directory_listing {
-        println!("\n📂 Listing temp directory:");
+        eprintln!("\n📂 Listing temp directory:");
         let list_args = serde_json::json!({
             "directory_path": "./temp"
         });
@@ -567,21 +567,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         match server.call_tool("list_directory", list_args).await {
             Ok(result) => {
                 if let Ok(listing) = serde_json::from_value::<DirectoryListing>(result) {
-                    println!("  ✅ Found {} items:", listing.total_count);
+                    eprintln!("  ✅ Found {} items:", listing.total_count);
                     for file in listing.files {
-                        println!(
+                        eprintln!(
                             "    - {}: {} ({} bytes)",
                             file.name, file.file_type, file.size
                         );
                     }
                 }
             }
-            Err(e) => println!("  ❌ List failed: {}", e),
+            Err(e) => eprintln!("  ❌ List failed: {}", e),
         }
     }
 
     // Test get file info
-    println!("\n📊 Getting file info:");
+    eprintln!("\n📊 Getting file info:");
     let info_args = serde_json::json!({
         "file_path": "./temp/demo.txt"
     });
@@ -589,22 +589,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match server.call_tool("get_file_info", info_args).await {
         Ok(result) => {
             if let Ok(info) = serde_json::from_value::<FileInfo>(result) {
-                println!("  ✅ File: {}", info.name);
-                println!("     Type: {}", info.file_type);
-                println!("     Size: {} bytes", info.size);
-                println!("     Modified: {}", info.modified);
+                eprintln!("  ✅ File: {}", info.name);
+                eprintln!("     Type: {}", info.file_type);
+                eprintln!("     Size: {} bytes", info.size);
+                eprintln!("     Modified: {}", info.modified);
             }
         }
-        Err(e) => println!("  ❌ Info failed: {}", e),
+        Err(e) => eprintln!("  ❌ Info failed: {}", e),
     }
 
-    println!("\n🎉 File operations demo completed!");
-    println!("\n🔒 Security features demonstrated:");
-    println!("   ✅ Path validation and sanitization");
-    println!("   ✅ Directory traversal prevention");
-    println!("   ✅ File extension filtering");
-    println!("   ✅ File size limits");
-    println!("   ✅ Read-only mode support");
+    eprintln!("\n🎉 File operations demo completed!");
+    eprintln!("\n🔒 Security features demonstrated:");
+    eprintln!("   ✅ Path validation and sanitization");
+    eprintln!("   ✅ Directory traversal prevention");
+    eprintln!("   ✅ File extension filtering");
+    eprintln!("   ✅ File size limits");
+    eprintln!("   ✅ Read-only mode support");
 
     Ok(())
 }

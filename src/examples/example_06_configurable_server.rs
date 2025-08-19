@@ -133,7 +133,7 @@ impl ConfigurableServer {
             if let Ok(config_content) = std::fs::read_to_string(&config_path) {
                 if let Ok(file_config) = serde_json::from_str::<ServerConfig>(&config_content) {
                     config = file_config;
-                    println!("📋 Loaded configuration from: {}", config_path);
+                    eprintln!("📋 Loaded configuration from: {}", config_path);
                 }
             }
         }
@@ -171,11 +171,11 @@ impl ConfigurableServer {
             }
         }
 
-        println!("⚙️  Configuration loaded:");
-        println!("   Server: {} v{}", config.server_name, config.version);
-        println!("   Max connections: {}", config.max_connections);
-        println!("   Timeout: {}s", config.timeout_seconds);
-        println!("   Features: {:?}", config.enabled_features);
+        eprintln!("⚙️  Configuration loaded:");
+        eprintln!("   Server: {} v{}", config.server_name, config.version);
+        eprintln!("   Max connections: {}", config.max_connections);
+        eprintln!("   Timeout: {}s", config.timeout_seconds);
+        eprintln!("   Features: {:?}", config.enabled_features);
 
         Ok(config)
     }
@@ -341,8 +341,8 @@ impl ConfigurableServer {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
-    println!("⚙️  Starting Configurable MCP Server");
-    println!("=====================================");
+    eprintln!("⚙️  Starting Configurable MCP Server");
+    eprintln!("=====================================");
 
     // Load configuration from multiple sources
     let config = ConfigurableServer::load_config()?;
@@ -351,17 +351,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let server = ConfigurableServer::new(config);
 
     // Demo configuration features
-    println!("\n🧪 Configuration Demo:");
+    eprintln!("\n🧪 Configuration Demo:");
 
     // List enabled tools
     let tools = server.list_tools();
-    println!("📋 Enabled tools ({}):", tools.len());
+    eprintln!("📋 Enabled tools ({}):", tools.len());
     for tool in &tools {
-        println!("  - {}: {}", tool.name, tool.description);
+        eprintln!("  - {}: {}", tool.name, tool.description);
     }
 
     // Test greeting in different languages
-    println!("\n🌍 Multi-language greeting test:");
+    eprintln!("\n🌍 Multi-language greeting test:");
     for (lang, name) in [
         ("en", "Developer"),
         ("es", "Desarrollador"),
@@ -373,45 +373,45 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         });
 
         match server.call_tool("greeting", args) {
-            Ok(result) => println!(
+            Ok(result) => eprintln!(
                 "  ✅ {}: {}",
                 lang,
                 result.get("message").unwrap_or(&Value::Null)
             ),
-            Err(e) => println!("  ❌ {}: {}", lang, e),
+            Err(e) => eprintln!("  ❌ {}: {}", lang, e),
         }
     }
 
     // Test echo with configured prefix
-    println!("\n📢 Echo test:");
+    eprintln!("\n📢 Echo test:");
     let echo_args = serde_json::json!({
         "message": "Configuration is working!"
     });
 
     match server.call_tool("echo", echo_args) {
-        Ok(result) => println!("  ✅ {}", result.get("echo").unwrap_or(&Value::Null)),
-        Err(e) => println!("  ❌ {}", e),
+        Ok(result) => eprintln!("  ✅ {}", result.get("echo").unwrap_or(&Value::Null)),
+        Err(e) => eprintln!("  ❌ {}", e),
     }
 
     // Test status
-    println!("\n📊 Server status:");
+    eprintln!("\n📊 Server status:");
     match server.call_tool("status", serde_json::json!({})) {
         Ok(result) => {
             if let Ok(status) = serde_json::from_value::<StatusResponse>(result) {
-                println!("  ✅ Server: {} v{}", status.server_name, status.version);
-                println!("  ⏱️  Uptime: {}s", status.uptime_seconds);
-                println!("  📊 Requests: {}", status.total_requests);
-                println!("  🔧 Features: {:?}", status.enabled_features);
+                eprintln!("  ✅ Server: {} v{}", status.server_name, status.version);
+                eprintln!("  ⏱️  Uptime: {}s", status.uptime_seconds);
+                eprintln!("  📊 Requests: {}", status.total_requests);
+                eprintln!("  🔧 Features: {:?}", status.enabled_features);
             }
         }
-        Err(e) => println!("  ❌ Status error: {}", e),
+        Err(e) => eprintln!("  ❌ Status error: {}", e),
     }
 
-    println!("\n🎉 Configuration demo completed!");
-    println!("\n💡 Try setting environment variables:");
-    println!("   export MCP_SERVER_NAME=\"My Custom Server\"");
-    println!("   export MCP_MAX_CONNECTIONS=50");
-    println!("   cargo run --bin example_06_configurable_server");
+    eprintln!("\n🎉 Configuration demo completed!");
+    eprintln!("\n💡 Try setting environment variables:");
+    eprintln!("   export MCP_SERVER_NAME=\"My Custom Server\"");
+    eprintln!("   export MCP_MAX_CONNECTIONS=50");
+    eprintln!("   cargo run --bin example_06_configurable_server");
 
     Ok(())
 }

@@ -204,11 +204,11 @@ impl CalculatorServer {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
-    println!("🧮 Starting Calculator MCP Server");
-    println!("📝 Available tools: calculator");
-    println!("💡 Send JSON-RPC messages via stdin");
-    println!("📋 Example: {{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{{\"name\":\"calculator\",\"arguments\":{{\"operation\":\"add\",\"a\":5,\"b\":3}}}}}}");
-    println!();
+    eprintln!("🧮 Starting Calculator MCP Server");
+    eprintln!("📝 Available tools: calculator");
+    eprintln!("💡 Send JSON-RPC messages via stdin");
+    eprintln!("📋 Example: {{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{{\"name\":\"calculator\",\"arguments\":{{\"operation\":\"add\",\"a\":5,\"b\":3}}}}}}");
+    eprintln!();
 
     let server = CalculatorServer::new();
 
@@ -254,7 +254,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    println!("🧮 Calculator server shutting down");
+    eprintln!("🧮 Calculator server shutting down");
     Ok(())
 }
 

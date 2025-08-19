@@ -438,17 +438,17 @@ impl StreamingServer {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
-    println!("📡 Starting Real-time Streaming MCP Server");
-    println!("==========================================");
+    eprintln!("📡 Starting Real-time Streaming MCP Server");
+    eprintln!("==========================================");
 
     // Create config
     let config = StreamingConfig::default();
 
-    println!("⚙️  Streaming Configuration:");
-    println!("   Max subscribers: {}", config.max_subscribers);
-    println!("   Buffer size: {}", config.buffer_size);
-    println!("   Data interval: {}ms", config.data_generation_interval_ms);
-    println!("   Heartbeat interval: {}ms", config.heartbeat_interval_ms);
+    eprintln!("⚙️  Streaming Configuration:");
+    eprintln!("   Max subscribers: {}", config.max_subscribers);
+    eprintln!("   Buffer size: {}", config.buffer_size);
+    eprintln!("   Data interval: {}ms", config.data_generation_interval_ms);
+    eprintln!("   Heartbeat interval: {}ms", config.heartbeat_interval_ms);
 
     // Create server
     let server = StreamingServer::new(config);
@@ -456,38 +456,38 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Start background streams
     server.start_background_streams();
 
-    println!("\n🧪 Streaming Demo:");
+    eprintln!("\n🧪 Streaming Demo:");
 
     // List tools
     let tools = server.list_tools();
-    println!("📋 Available tools ({}):", tools.len());
+    eprintln!("📋 Available tools ({}):", tools.len());
     for tool in &tools {
-        println!("  - {}: {}", tool.name, tool.description);
+        eprintln!("  - {}: {}", tool.name, tool.description);
     }
 
     // Wait a moment for some data to be generated
     tokio::time::sleep(Duration::from_millis(2000)).await;
 
     // Get stream stats
-    println!("\n📊 Stream statistics:");
+    eprintln!("\n📊 Stream statistics:");
     match server
         .call_tool("get_stream_stats", serde_json::json!({}))
         .await
     {
         Ok(result) => {
             if let Ok(stats) = serde_json::from_value::<StreamStats>(result) {
-                println!("  ✅ Active streams: {}", stats.active_streams);
-                println!("     Total messages: {}", stats.total_messages);
-                println!("     Subscribers: {}", stats.subscriber_count);
-                println!("     Buffer utilization: {:.1}%", stats.buffer_utilization);
-                println!("     Uptime: {}s", stats.uptime_seconds);
+                eprintln!("  ✅ Active streams: {}", stats.active_streams);
+                eprintln!("     Total messages: {}", stats.total_messages);
+                eprintln!("     Subscribers: {}", stats.subscriber_count);
+                eprintln!("     Buffer utilization: {:.1}%", stats.buffer_utilization);
+                eprintln!("     Uptime: {}s", stats.uptime_seconds);
             }
         }
-        Err(e) => println!("  ❌ Stats failed: {}", e),
+        Err(e) => eprintln!("  ❌ Stats failed: {}", e),
     }
 
     // Get recent messages
-    println!("\n📨 Recent messages:");
+    eprintln!("\n📨 Recent messages:");
     match server
         .call_tool(
             "get_recent_messages",
@@ -501,12 +501,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(result) => {
             let default_count = Value::Number(serde_json::Number::from(0));
             let count = result.get("count").unwrap_or(&default_count);
-            println!("  ✅ Retrieved {} recent metrics messages", count);
+            eprintln!("  ✅ Retrieved {} recent metrics messages", count);
 
             if let Some(messages) = result.get("messages").and_then(|m| m.as_array()) {
                 for message in messages.iter().take(2) {
                     if let Some(id) = message.get("id") {
-                        println!(
+                        eprintln!(
                             "     Message {}: {}",
                             id,
                             message.get("message_type").unwrap_or(&Value::Null)
@@ -515,11 +515,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
         }
-        Err(e) => println!("  ❌ Get messages failed: {}", e),
+        Err(e) => eprintln!("  ❌ Get messages failed: {}", e),
     }
 
     // Send custom message
-    println!("\n📤 Sending custom message:");
+    eprintln!("\n📤 Sending custom message:");
     match server
         .call_tool(
             "send_custom_message",
@@ -533,16 +533,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(result) => {
             let message_id = result.get("message_id").unwrap_or(&Value::Null);
             let subscriber_count = result.get("subscriber_count").unwrap_or(&Value::Null);
-            println!(
+            eprintln!(
                 "  ✅ Sent message {} to {} subscribers",
                 message_id, subscriber_count
             );
         }
-        Err(e) => println!("  ❌ Send message failed: {}", e),
+        Err(e) => eprintln!("  ❌ Send message failed: {}", e),
     }
 
     // Start a temporary stream
-    println!("\n🎬 Starting demo stream:");
+    eprintln!("\n🎬 Starting demo stream:");
     match server
         .call_tool(
             "start_stream",
@@ -555,7 +555,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await
     {
         Ok(result) => {
-            println!(
+            eprintln!(
                 "  ✅ Started event stream: {}",
                 result.get("message").unwrap_or(&Value::Null)
             );
@@ -569,21 +569,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .await
             {
                 if let Ok(stats) = serde_json::from_value::<StreamStats>(final_stats) {
-                    println!("  📈 Final message count: {}", stats.total_messages);
+                    eprintln!("  📈 Final message count: {}", stats.total_messages);
                 }
             }
         }
-        Err(e) => println!("  ❌ Start stream failed: {}", e),
+        Err(e) => eprintln!("  ❌ Start stream failed: {}", e),
     }
 
-    println!("\n🎉 Streaming demo completed!");
-    println!("\n🌊 Streaming features demonstrated:");
-    println!("   ✅ Real-time message broadcasting");
-    println!("   ✅ Multiple concurrent streams");
-    println!("   ✅ Async channel-based communication");
-    println!("   ✅ Subscriber management");
-    println!("   ✅ Message filtering and retrieval");
-    println!("   ✅ Stream statistics and monitoring");
+    eprintln!("\n🎉 Streaming demo completed!");
+    eprintln!("\n🌊 Streaming features demonstrated:");
+    eprintln!("   ✅ Real-time message broadcasting");
+    eprintln!("   ✅ Multiple concurrent streams");
+    eprintln!("   ✅ Async channel-based communication");
+    eprintln!("   ✅ Subscriber management");
+    eprintln!("   ✅ Message filtering and retrieval");
+    eprintln!("   ✅ Stream statistics and monitoring");
 
     Ok(())
 }

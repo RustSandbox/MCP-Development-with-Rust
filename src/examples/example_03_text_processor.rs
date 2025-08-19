@@ -164,15 +164,15 @@ impl TextProcessorServer {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
-    println!("📝 Starting Text Processor MCP Server");
-    println!("🛠️  Available tools: transform_text, analyze_text");
-    println!("💡 Send JSON-RPC messages via stdin");
+    eprintln!("📝 Starting Text Processor MCP Server");
+    eprintln!("🛠️  Available tools: transform_text, analyze_text");
+    eprintln!("💡 Send JSON-RPC messages via stdin");
 
     // Simple demo mode for testing
     let server = TextProcessorServer::new();
 
     // Demo usage
-    println!("\n🧪 Running demo transformations:");
+    eprintln!("\n🧪 Running demo transformations:");
 
     let demo_text = "hello world";
     let transform_args = serde_json::json!({
@@ -183,12 +183,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match server.call_tool("transform_text", transform_args) {
         Ok(result) => {
             let response: TextResponse = serde_json::from_value(result).unwrap();
-            println!(
+            eprintln!(
                 "✅ Transform '{}' to uppercase: '{}'",
                 demo_text, response.result
             );
         }
-        Err(e) => println!("❌ Transform failed: {}", e),
+        Err(e) => eprintln!("❌ Transform failed: {}", e),
     }
 
     let analyze_args = serde_json::json!({
@@ -198,15 +198,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match server.call_tool("analyze_text", analyze_args) {
         Ok(result) => {
             let response: TextAnalysisResponse = serde_json::from_value(result).unwrap();
-            println!(
+            eprintln!(
                 "✅ Analysis of '{}': {} words, {} chars",
                 demo_text, response.word_count, response.character_count
             );
         }
-        Err(e) => println!("❌ Analysis failed: {}", e),
+        Err(e) => eprintln!("❌ Analysis failed: {}", e),
     }
 
-    println!("\n🎉 Text processor demo completed");
+    eprintln!("\n🎉 Text processor demo completed");
     Ok(())
 }
 

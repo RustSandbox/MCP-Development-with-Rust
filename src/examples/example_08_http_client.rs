@@ -384,33 +384,33 @@ impl HttpClientServer {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
-    println!("🌐 Starting HTTP Client MCP Server");
-    println!("=================================");
+    eprintln!("🌐 Starting HTTP Client MCP Server");
+    eprintln!("=================================");
 
     // Create config
     let config = HttpClientConfig::default();
 
-    println!("⚙️  HTTP Configuration:");
-    println!("   Timeout: {}s", config.timeout_seconds);
-    println!("   Max response size: {} bytes", config.max_response_size);
-    println!("   Allowed domains: {:?}", config.allowed_domains);
-    println!("   User agent: {}", config.user_agent);
+    eprintln!("⚙️  HTTP Configuration:");
+    eprintln!("   Timeout: {}s", config.timeout_seconds);
+    eprintln!("   Max response size: {} bytes", config.max_response_size);
+    eprintln!("   Allowed domains: {:?}", config.allowed_domains);
+    eprintln!("   User agent: {}", config.user_agent);
 
     // Create server
     let server = HttpClientServer::new(config)?;
 
     // Demo HTTP operations
-    println!("\n🧪 HTTP Client Demo:");
+    eprintln!("\n🧪 HTTP Client Demo:");
 
     // List tools
     let tools = server.list_tools();
-    println!("📋 Available tools ({}):", tools.len());
+    eprintln!("📋 Available tools ({}):", tools.len());
     for tool in &tools {
-        println!("  - {}: {}", tool.name, tool.description);
+        eprintln!("  - {}: {}", tool.name, tool.description);
     }
 
     // Test health check
-    println!("\n🏥 Health check test:");
+    eprintln!("\n🏥 Health check test:");
     let health_args = serde_json::json!({
         "url": "https://httpbin.org"
     });
@@ -425,16 +425,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let response_time = result.get("response_time_ms").unwrap_or(&Value::Null);
 
             if accessible {
-                println!("  ✅ httpbin.org is accessible ({}ms)", response_time);
+                eprintln!("  ✅ httpbin.org is accessible ({}ms)", response_time);
             } else {
-                println!("  ❌ httpbin.org is not accessible");
+                eprintln!("  ❌ httpbin.org is not accessible");
             }
         }
-        Err(e) => println!("  ❌ Health check failed: {}", e),
+        Err(e) => eprintln!("  ❌ Health check failed: {}", e),
     }
 
     // Test API call
-    println!("\n🔌 API call test:");
+    eprintln!("\n🔌 API call test:");
     let api_args = serde_json::json!({
         "service": "httpbin",
         "endpoint": "get"
@@ -443,20 +443,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match server.call_tool("api_call", api_args).await {
         Ok(result) => {
             if let Ok(response) = serde_json::from_value::<HttpResponse>(result) {
-                println!("  ✅ API call successful:");
-                println!("     Status: {}", response.status);
-                println!(
+                eprintln!("  ✅ API call successful:");
+                eprintln!("     Status: {}", response.status);
+                eprintln!(
                     "     Content-Type: {}",
                     response.content_type.unwrap_or("unknown".to_string())
                 );
-                println!("     Body size: {} bytes", response.body.len());
+                eprintln!("     Body size: {} bytes", response.body.len());
             }
         }
-        Err(e) => println!("  ❌ API call failed: {}", e),
+        Err(e) => eprintln!("  ❌ API call failed: {}", e),
     }
 
     // Test custom HTTP request
-    println!("\n📡 Custom HTTP request test:");
+    eprintln!("\n📡 Custom HTTP request test:");
     let http_args = serde_json::json!({
         "url": "https://jsonplaceholder.typicode.com/posts/1",
         "method": "GET"
@@ -465,27 +465,27 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match server.call_tool("http_request", http_args).await {
         Ok(result) => {
             if let Ok(response) = serde_json::from_value::<HttpResponse>(result) {
-                println!("  ✅ HTTP request successful:");
-                println!("     Status: {}", response.status);
-                println!("     URL: {}", response.url);
+                eprintln!("  ✅ HTTP request successful:");
+                eprintln!("     Status: {}", response.status);
+                eprintln!("     URL: {}", response.url);
 
                 // Try to parse JSON response
                 if let Ok(json) = serde_json::from_str::<Value>(&response.body) {
                     if let Some(title) = json.get("title") {
-                        println!("     Post title: {}", title);
+                        eprintln!("     Post title: {}", title);
                     }
                 }
             }
         }
-        Err(e) => println!("  ❌ HTTP request failed: {}", e),
+        Err(e) => eprintln!("  ❌ HTTP request failed: {}", e),
     }
 
-    println!("\n🎉 HTTP client demo completed!");
-    println!("\n🔒 Security features:");
-    println!("   ✅ Domain allowlisting");
-    println!("   ✅ Response size limits");
-    println!("   ✅ Request timeouts");
-    println!("   ✅ URL validation");
+    eprintln!("\n🎉 HTTP client demo completed!");
+    eprintln!("\n🔒 Security features:");
+    eprintln!("   ✅ Domain allowlisting");
+    eprintln!("   ✅ Response size limits");
+    eprintln!("   ✅ Request timeouts");
+    eprintln!("   ✅ URL validation");
 
     Ok(())
 }

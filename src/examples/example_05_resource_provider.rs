@@ -301,20 +301,20 @@ impl ResourceProviderServer {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
-    println!("📚 Starting Resource Provider MCP Server");
-    println!("🗂️  Sample documents with search capabilities loaded");
-    println!();
+    eprintln!("📚 Starting Resource Provider MCP Server");
+    eprintln!("🗂️  Sample documents with search capabilities loaded");
+    eprintln!();
 
     let server = ResourceProviderServer::new();
 
     // Demonstrate resource functionality
-    println!("🧪 Demonstrating resource functionality:");
+    eprintln!("🧪 Demonstrating resource functionality:");
 
     // List resources
     let resources = server.list_resources();
-    println!("📋 Available resources ({} total):", resources.len());
+    eprintln!("📋 Available resources ({} total):", resources.len());
     for resource in &resources {
-        println!(
+        eprintln!(
             "  - {} ({})",
             resource.uri,
             resource.name.as_deref().unwrap_or("Unnamed")
@@ -322,7 +322,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Demonstrate search functionality
-    println!("\n🔍 Search demonstration:");
+    eprintln!("\n🔍 Search demonstration:");
     let search_args = serde_json::json!({
         "query": "Rust",
         "limit": 3
@@ -331,22 +331,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match server.call_tool("search_documents", search_args) {
         Ok(result) => {
             let response: SearchResponse = serde_json::from_value(result).unwrap();
-            println!(
+            eprintln!(
                 "✅ Found {} documents matching 'Rust':",
                 response.total_count
             );
             for doc in response.matches {
-                println!("  - {}: {} [{}]", doc.id, doc.title, doc.tags.join(", "));
+                eprintln!("  - {}: {} [{}]", doc.id, doc.title, doc.tags.join(", "));
             }
         }
-        Err(e) => println!("❌ Search failed: {}", e),
+        Err(e) => eprintln!("❌ Search failed: {}", e),
     }
 
     // Demonstrate resource reading
-    println!("\n📖 Resource reading demonstration:");
+    eprintln!("\n📖 Resource reading demonstration:");
     match server.read_resource("document://doc1") {
         Ok(content) => {
-            println!("✅ Successfully read document://doc1");
+            eprintln!("✅ Successfully read document://doc1");
             let text = content
                 .get("contents")
                 .and_then(|c| c.as_array())
@@ -354,15 +354,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .and_then(|item| item.get("text"))
                 .and_then(|t| t.as_str())
                 .unwrap_or("No content");
-            println!(
+            eprintln!(
                 "📄 Content preview: {}...",
                 &text[..std::cmp::min(text.len(), 100)]
             );
         }
-        Err(e) => println!("❌ Read failed: {}", e),
+        Err(e) => eprintln!("❌ Read failed: {}", e),
     }
 
-    println!("\n🎉 Resource provider demonstration completed!");
+    eprintln!("\n🎉 Resource provider demonstration completed!");
     Ok(())
 }
 

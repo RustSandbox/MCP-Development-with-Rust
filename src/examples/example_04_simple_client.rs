@@ -44,19 +44,19 @@ impl SimpleMcpClient {
 
     // Simulate connecting to an MCP server
     pub async fn connect(&self) -> Result<(), String> {
-        println!("🔗 Connecting to MCP server: {}", self.server_url);
+        eprintln!("🔗 Connecting to MCP server: {}", self.server_url);
 
         // In a real implementation, this would establish a connection
         // For this demo, we'll just simulate success
         tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 
-        println!("✅ Connected successfully!");
+        eprintln!("✅ Connected successfully!");
         Ok(())
     }
 
     // Simulate listing available tools from the server
     pub async fn list_tools(&self) -> Result<Vec<ToolInfo>, String> {
-        println!("🔍 Discovering available tools...");
+        eprintln!("🔍 Discovering available tools...");
 
         // Simulate network delay
         tokio::time::sleep(std::time::Duration::from_millis(50)).await;
@@ -101,9 +101,9 @@ impl SimpleMcpClient {
             },
         ];
 
-        println!("📋 Found {} tools", tools.len());
+        eprintln!("📋 Found {} tools", tools.len());
         for tool in &tools {
-            println!("  - {}: {}", tool.name, tool.description);
+            eprintln!("  - {}: {}", tool.name, tool.description);
         }
 
         Ok(tools)
@@ -111,7 +111,7 @@ impl SimpleMcpClient {
 
     // Simulate calling a tool on the server
     pub async fn call_tool(&self, request: ToolCallRequest) -> Result<ToolCallResponse, String> {
-        println!("🔧 Calling tool: {}", request.tool_name);
+        eprintln!("🔧 Calling tool: {}", request.tool_name);
 
         // Simulate network delay
         tokio::time::sleep(std::time::Duration::from_millis(100)).await;
@@ -216,8 +216,8 @@ impl SimpleMcpClient {
 
     // Demonstrate a complete client workflow
     pub async fn demonstrate_client_workflow(&self) -> Result<(), String> {
-        println!("🚀 Starting MCP Client Demonstration");
-        println!("====================================");
+        eprintln!("🚀 Starting MCP Client Demonstration");
+        eprintln!("====================================");
 
         // Step 1: Connect to server
         self.connect().await?;
@@ -226,7 +226,7 @@ impl SimpleMcpClient {
         let tools = self.list_tools().await?;
 
         // Step 3: Call each tool with sample data
-        println!("\n🧪 Testing tools with sample data:");
+        eprintln!("\n🧪 Testing tools with sample data:");
 
         // Test greeting tool
         if tools.iter().any(|t| t.name == "greeting") {
@@ -241,16 +241,16 @@ impl SimpleMcpClient {
                     result: Some(result),
                     ..
                 } => {
-                    println!("✅ Greeting result: {}", result);
+                    eprintln!("✅ Greeting result: {}", result);
                 }
                 ToolCallResponse {
                     success: false,
                     error: Some(err),
                     ..
                 } => {
-                    println!("❌ Greeting failed: {}", err);
+                    eprintln!("❌ Greeting failed: {}", err);
                 }
-                _ => println!("⚠️  Unexpected greeting response"),
+                _ => eprintln!("⚠️  Unexpected greeting response"),
             }
         }
 
@@ -271,16 +271,16 @@ impl SimpleMcpClient {
                     result: Some(result),
                     ..
                 } => {
-                    println!("✅ Calculator result: {}", result);
+                    eprintln!("✅ Calculator result: {}", result);
                 }
                 ToolCallResponse {
                     success: false,
                     error: Some(err),
                     ..
                 } => {
-                    println!("❌ Calculator failed: {}", err);
+                    eprintln!("❌ Calculator failed: {}", err);
                 }
-                _ => println!("⚠️  Unexpected calculator response"),
+                _ => eprintln!("⚠️  Unexpected calculator response"),
             }
         }
 
@@ -300,20 +300,20 @@ impl SimpleMcpClient {
                     result: Some(result),
                     ..
                 } => {
-                    println!("✅ Text transform result: {}", result);
+                    eprintln!("✅ Text transform result: {}", result);
                 }
                 ToolCallResponse {
                     success: false,
                     error: Some(err),
                     ..
                 } => {
-                    println!("❌ Text transform failed: {}", err);
+                    eprintln!("❌ Text transform failed: {}", err);
                 }
-                _ => println!("⚠️  Unexpected text transform response"),
+                _ => eprintln!("⚠️  Unexpected text transform response"),
             }
         }
 
-        println!("\n🎉 Client demonstration completed successfully!");
+        eprintln!("\n🎉 Client demonstration completed successfully!");
         Ok(())
     }
 }
