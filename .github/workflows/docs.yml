@@ -786,7 +786,7 @@ jobs:
     # Step 9: Upload to GitHub Pages (only if Pages setup succeeded)
     - name: Upload to GitHub Pages
       if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && steps.setup-pages.outcome == 'success'
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v4
       with:
         path: target/doc/
 
