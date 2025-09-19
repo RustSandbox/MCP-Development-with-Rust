@@ -41,7 +41,7 @@ jobs:
     # Step 2: Install Rust toolchain from rust-toolchain.toml
     # This ensures consistent Rust 1.86.0 that supports Cargo.lock v4
     - name: Install Rust toolchain
-      uses: dtolnay/rust-toolchain@1.86.0
+      uses: dtolnay/rust-toolchain@1.100.0
       with:
         components: rustfmt, clippy
     
@@ -90,7 +90,7 @@ jobs:
     
     # Step 2: Install Rust toolchain with Cargo.lock v4 support
     - name: Install Rust toolchain
-      uses: dtolnay/rust-toolchain@1.86.0
+      uses: dtolnay/rust-toolchain@1.100.0
       with:
         components: rustfmt, clippy
     
@@ -133,7 +133,7 @@ jobs:
     
     # Step 2: Install Rust toolchain with Cargo.lock v4 support
     - name: Install Rust toolchain
-      uses: dtolnay/rust-toolchain@1.86.0
+      uses: dtolnay/rust-toolchain@1.100.0
     
     # Step 3: Setup Rust caching
     - name: Setup Rust cache
@@ -167,7 +167,7 @@ jobs:
     
     # Step 2: Install Rust toolchain with Cargo.lock v4 support
     - name: Install Rust toolchain
-      uses: dtolnay/rust-toolchain@1.86.0
+      uses: dtolnay/rust-toolchain@1.100.0
     
     # Step 3: Setup caching
     - name: Setup Rust cache
