@@ -46,7 +46,7 @@ jobs:
     steps:
     # Step 1: Check out the source code
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     
     # Step 2: Install Rust toolchain with Cargo.lock v4 support
     - name: Install Rust toolchain
@@ -814,7 +814,7 @@ jobs:
     steps:
     # Step 1: Check out the source code
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     
     # Step 2: Install Rust toolchain with Cargo.lock v4 support
     - name: Install Rust toolchain
